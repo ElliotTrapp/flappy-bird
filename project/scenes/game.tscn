@@ -1,0 +1,81 @@
+[gd_scene load_steps=12 format=3 uid="uid://buekevj4qymd5"]
+
+[ext_resource type="Script" path="res://scenes/game.gd" id="1_1jrdl"]
+[ext_resource type="Texture2D" uid="uid://d38ceuoo614k4" path="res://assets/bg.png" id="1_0866i"]
+[ext_resource type="Script" path="res://scenes/bird.gd" id="2_1mq02"]
+[ext_resource type="Texture2D" uid="uid://dfuofh4nwer0n" path="res://assets/bird1.png" id="2_v06fe"]
+[ext_resource type="Texture2D" uid="uid://533ubvnyvpxe" path="res://assets/bird2.png" id="3_2e88n"]
+[ext_resource type="Texture2D" uid="uid://cb3fw6j2c364v" path="res://assets/bird3.png" id="4_81li2"]
+[ext_resource type="Texture2D" uid="uid://cum5khv3jtce1" path="res://assets/ground.png" id="7_35hgn"]
+[ext_resource type="Script" path="res://scenes/ground.gd" id="7_bux1b"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_6lnc7"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_v06fe")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_2e88n")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_81li2")
+}],
+"loop": true,
+"name": &"flying",
+"speed": 5.0
+}]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_llo3a"]
+radius = 18.0
+height = 52.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_uw1be"]
+size = Vector2(1728, 174)
+
+[node name="Game" type="Node"]
+script = ExtResource("1_1jrdl")
+
+[node name="Background" type="Sprite2D" parent="."]
+texture = ExtResource("1_0866i")
+offset = Vector2(432, 384)
+
+[node name="Bird" type="CharacterBody2D" parent="."]
+script = ExtResource("2_1mq02")
+
+[node name="BirdAnimation" type="AnimatedSprite2D" parent="Bird"]
+sprite_frames = SubResource("SpriteFrames_6lnc7")
+animation = &"flying"
+
+[node name="BirdCollision" type="CollisionShape2D" parent="Bird"]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_llo3a")
+
+[node name="Ground" type="Area2D" parent="."]
+position = Vector2(0, 848)
+scale = Vector2(1, 1.1)
+script = ExtResource("7_bux1b")
+
+[node name="GroundSprite" type="Sprite2D" parent="Ground"]
+texture = ExtResource("7_35hgn")
+offset = Vector2(856, 0)
+
+[node name="GroundCollision" type="CollisionShape2D" parent="Ground"]
+position = Vector2(856, -1.09673e-05)
+shape = SubResource("RectangleShape2D_uw1be")
+
+[node name="Pipe" type="Area2D" parent="."]
+
+[node name="Upper" type="Sprite2D" parent="Pipe"]
+
+[node name="PipeUpperCollision1" type="CollisionShape2D" parent="Pipe"]
+
+[node name="PipeUpperCollision2" type="CollisionShape2D" parent="Pipe"]
+
+[node name="Lower" type="Sprite2D" parent="Pipe"]
+
+[node name="PipeLowerCollision1" type="CollisionShape2D" parent="Pipe"]
+
+[node name="PipeLowerCollision2" type="CollisionShape2D" parent="Pipe"]
+
+[connection signal="body_entered" from="Ground" to="Ground" method="_on_body_entered"]
