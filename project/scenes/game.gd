@@ -3,9 +3,9 @@ extends Node
 @export var pipe_scene : PackedScene
 @export var ground_scene : PackedScene
 
-const SCROLL_SPEED : int = 4
-const PIPE_DELAY : int = 200
-const PIPE_RANGE : int = 200
+const SCROLL_SPEED : int = 3
+const PIPE_DELAY : int = 150
+const PIPE_RANGE : int = 150
 const VALID_BUTTONS = [Key.KEY_SPACE, Key.KEY_ESCAPE, MouseButton.MOUSE_BUTTON_LEFT]
 
 var game_running : bool = false
