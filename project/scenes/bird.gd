@@ -2,7 +2,7 @@ extends CharacterBody2D
 
 const GRAVITY : int = 1000
 const MAX_VEL : int = 600
-const FLAP_SPEED : int = -500
+const FLAP_SPEED : int = -400
 const START_POS = Vector2(100,400)
 
 var flying : bool = false
@@ -39,7 +39,3 @@ func _physics_process(delta: float) -> void:
 		set_rotation(PI/2)
 		$BirdAnimation.stop()
 	move_and_collide(velocity * delta)
-	
-	# Handle jump.
-	if Input.is_action_just_pressed("ui_accept"):
-		flap()

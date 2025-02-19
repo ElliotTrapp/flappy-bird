@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bev24jd650lwg"]
+
+[ext_resource type="PackedScene" uid="uid://bi45mx0krve7u" path="res://scenes/menu.tscn" id="1_x530x"]
+[ext_resource type="PackedScene" uid="uid://buekevj4qymd5" path="res://scenes/game.tscn" id="2_kd4sa"]
+
+[node name="Main" type="Node"]
+
+[node name="Menu" parent="." instance=ExtResource("1_x530x")]
+
+[node name="Game" parent="." instance=ExtResource("2_kd4sa")]

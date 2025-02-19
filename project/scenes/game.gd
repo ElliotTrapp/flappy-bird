@@ -1,5 +1,8 @@
 extends Node
 
+@export var pipe_scene : PackedScene
+@export var ground_scene : PackedScene
+
 const SCROLL_SPEED : int = 4
 const PIPE_DELAY : int = 200
 const PIPE_RANGE : int = 200
@@ -38,16 +41,56 @@ func new_game() -> void:
 	game_over = false
 	score = 0
 	scroll = 0
+	
+	$ScoreLabel.text = "SCORE: " + str(score)
+	$GameOver.hide()
+	get_tree().call_group("pipes", "queue_free")
+	pipes.clear()
+	#generate starting pipes
+	generate_pipes()
 	$Bird.reset()
 
 func start_game() -> void:
 	game_running = true
 	$Bird.flying = true
 	$Bird.flap()
+	$PipeTimer.start()
+	# do this after the bird is in place
+	var ground = ground_scene.instantiate()
+	ground.hit.connect(bird_hit)
+	add_child(ground)
 
 func end_game() -> void:
+	print_debug('game over!')
 	game_running = false
 	game_over = true
+	$Bird.falling = true
+	$Bird.flying = false
+	$PipeTimer.stop()
+	$GameOver.show()
+
+func bird_hit() -> void:
+	end_game()
+	
+func bird_scored() -> void:
+	score += 1
+	$ScoreLabel.text = "SCORE: " + str(score)
+
+func generate_pipes() -> void:
+	var pipe = pipe_scene.instantiate()
+	pipe.position.x = screen_size.x + PIPE_DELAY
+	pipe.position.y = (screen_size.y - ground_height) / 2 + randi_range(-PIPE_RANGE, PIPE_RANGE)
+	print_debug('pipe with height of %s' % pipe.position.y)
+	pipe.hit.connect(bird_hit)
+	pipe.scored.connect(bird_scored)
+	add_child(pipe)
+	pipes.append(pipe)
+
+func _on_pipe_timer_timeout() -> void:
+	generate_pipes()
+	
+func _on_game_over_restart() -> void:
+	new_game()
 
 func _input(event: InputEvent) -> void:
 	# if the game is over, do nothing
@@ -71,6 +114,7 @@ func _input(event: InputEvent) -> void:
 func _ready() -> void:
 	print_debug('game initializing')
 	screen_size = get_window().size
+	ground_height = $Ground.get_node("GroundSprite").position.y
 	new_game()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -84,3 +128,5 @@ func _process(_delta: float) -> void:
 	if scroll >= screen_size.x:
 		scroll = 0
 	$Ground.position.x = -scroll
+	for pipe in pipes:
+		pipe.position.x -= SCROLL_SPEED
